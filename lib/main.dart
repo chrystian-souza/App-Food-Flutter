@@ -6,7 +6,7 @@ main() {
   runApp(
     MaterialApp(
       theme: ThemeData(
-      primarySwatch: Colors.cyan
+      primarySwatch: Colors.grey
        
 
       ),
