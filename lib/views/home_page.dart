@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-//import 'package:flutter/widgets.dart';
+import 'carousel_home.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -54,13 +54,30 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      body: Center(
-        child: Text(
-          'Texto em Negrito',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 24,
-          ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Center(
+              child: Card(
+                elevation: 4,
+                color: Colors.black,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: ClipRRect(
+                  
+                  child: Image.network(
+                    'https://source.unsplash.com/200x200/?Burguer',
+                    fit: BoxFit.cover,
+                    width: 400, // Ajuste a largura conforme necessário
+                    height: 100, // Ajuste a altura conforme necessário
+                  ),
+                ),
+              ),
+            ),
+            Carousel(),
+            Carousel(),
+          ],
         ),
       ),
       bottomNavigationBar: Stack(
@@ -92,19 +109,15 @@ class _HomePageState extends State<HomePage> {
             ],
             type: BottomNavigationBarType.fixed,
             selectedItemColor: Colors.blue,
-            //fixedColor: Colors.blue,
-            //unselectedItemColor: Colors.black,
             showSelectedLabels: true,
             showUnselectedLabels: true,
           ),
-         
           Center(
-            heightFactor: 0.10,
+            heightFactor: 0.1,
             child: DecoratedBox(
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                border: Border.all(color: Color.fromARGB(255, 0, 0, 0), width: 4),
-               
+                border: Border.all(color: Colors.black, width: 4),
               ),
               child: ClipOval(
                 child: Container(
@@ -114,8 +127,14 @@ class _HomePageState extends State<HomePage> {
                     height: 60,
                     child: FloatingActionButton(
                       onPressed: () => _onItemTapped(2),
-                      elevation: 0, // Remove default shadow
-                      child: Icon(Icons.shopping_cart_outlined, color: Colors.grey),
+                      elevation: 20,
+                      hoverColor: Colors.black,
+                      // Remove default shadow
+                      backgroundColor: Colors.white,
+                      child: Icon(
+                        Icons.shopping_cart_outlined,
+                        color: Colors.black,
+                      ),
                     ),
                   ),
                 ),
