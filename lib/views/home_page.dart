@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'carousel_home.dart';
+import 'category_cards.dart';
+import 'cards.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -55,31 +57,38 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Center(
-              child: Card(
-                elevation: 4,
-                color: Colors.black,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: ClipRRect(
-                  
-                  child: Image.network(
-                    'https://source.unsplash.com/200x200/?Burguer',
-                    fit: BoxFit.cover,
-                    width: 400, // Ajuste a largura conforme necessário
-                    height: 100, // Ajuste a altura conforme necessário
-                  ),
-                ),
-              ),
-            ),
-            Carousel(),
-            Carousel(),
+          child: Column(children: [
+        CategorySection(
+          categoryTitle: 'Categories',
+          cards: [
+            CustomCard(
+                imageUrl: 'https://source.unsplash.com/200x200/?Burger',
+                title: 'Burger '),
+            CustomCard(
+                imageUrl: 'https://source.unsplash.com/200x200/?Pizza',
+                title: 'Pizza '),
+            CustomCard(
+                imageUrl: 'https://source.unsplash.com/200x200/?Sushi',
+                title: 'Sushi '),
           ],
         ),
-      ),
+        CategorySection(
+          categoryTitle: 'Recommended',
+          cards: [
+            CustomCard(
+                imageUrl: 'https://source.unsplash.com/200x200/?Burger',
+                title: 'Burger '),
+            CustomCard(
+                imageUrl: 'https://source.unsplash.com/200x200/?Pizza',
+                title: 'Pizza '),
+            CustomCard(
+                imageUrl: 'https://source.unsplash.com/200x200/?Sushi',
+                title: 'Sushi '),
+          ],
+        ),
+        Carousel(),
+        Carousel(),
+      ])),
       bottomNavigationBar: Stack(
         children: [
           BottomNavigationBar(

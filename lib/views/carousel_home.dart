@@ -19,6 +19,7 @@ class Carousel extends StatelessWidget {
           height: 200.0,
           autoPlay: false,
           enlargeCenterPage: true,
+          
         ),
         items: imageUrls.map((i) {
           return Builder(
