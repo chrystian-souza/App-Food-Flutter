@@ -21,8 +21,9 @@ class CustomCard extends StatelessWidget {
             Image.network(
               imageUrl,
               fit: BoxFit.cover,
-              width: 120, 
-              height: 120,
+              width: 100,
+              height: 100,
+             
             ),
             Positioned(
               bottom: 0,

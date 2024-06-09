@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'carousel_home.dart';
-import 'category_cards.dart';
-import 'cards.dart';
+import '../components/carousel_home.dart';
+import '../components/category_cards.dart';
+import '../components/cards.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -23,7 +23,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.amber,
+        backgroundColor: Colors.white,
         title: Row(
           children: [
             Container(
@@ -57,38 +57,64 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
       body: SingleChildScrollView(
-          child: Column(children: [
-        CategorySection(
-          categoryTitle: 'Categories',
-          cards: [
-            CustomCard(
-                imageUrl: 'https://source.unsplash.com/200x200/?Burger',
-                title: 'Burger '),
-            CustomCard(
-                imageUrl: 'https://source.unsplash.com/200x200/?Pizza',
-                title: 'Pizza '),
-            CustomCard(
-                imageUrl: 'https://source.unsplash.com/200x200/?Sushi',
-                title: 'Sushi '),
+        child: Column(
+          children: [
+            Center(
+              child: Card(
+                elevation: 4,
+                color: Colors.black,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(16),
+                  child: Image.network(
+                    'https://conteudo.imguol.com.br/c/noticias/f6/2022/07/21/hellmanns-escolhe-sao-paulo-para-lancar-sua-primeira-hamburgueria-1658432069335_v2_4x3.jpg',
+                    fit: BoxFit.cover,
+                    width: 400,
+                    height: 200,
+                  ),
+                ),
+              ),
+            ),
+            CategorySection(
+              categoryTitle: 'Categories',
+              cards: [
+                CustomCard(
+                  imageUrl: 'https://conteudo.imguol.com.br/c/noticias/f6/2022/07/21/hellmanns-escolhe-sao-paulo-para-lancar-sua-primeira-hamburgueria-1658432069335_v2_4x3.jpg',
+                  title: 'Burger ',
+                ),
+                CustomCard(
+                  imageUrl: 'https://conteudo.imguol.com.br/c/noticias/f6/2022/07/21/hellmanns-escolhe-sao-paulo-para-lancar-sua-primeira-hamburgueria-1658432069335_v2_4x3.jpg',
+                  title: 'Pizza ',
+                ),
+                CustomCard(
+                  imageUrl: 'https://conteudo.imguol.com.br/c/noticias/f6/2022/07/21/hellmanns-escolhe-sao-paulo-para-lancar-sua-primeira-hamburgueria-1658432069335_v2_4x3.jpg',
+                  title: 'Sushi ',
+                ),
+              ],
+            ),
+            Carousel(
+              carousel: 'Popular Now',
+              titulo: 'Beef Burguer',
+              imageUrls: [
+                'https://conteudo.imguol.com.br/c/noticias/f6/2022/07/21/hellmanns-escolhe-sao-paulo-para-lancar-sua-primeira-hamburgueria-1658432069335_v2_4x3.jpg'
+              ],
+              preco: '19.90',
+              info: 'Mcdi',
+            ),
+            Carousel(
+              carousel: 'Recommended',
+              titulo: 'Beef Burguer',
+              imageUrls: [
+                'https://conteudo.imguol.com.br/c/noticias/f6/2022/07/21/hellmanns-escolhe-sao-paulo-para-lancar-sua-primeira-hamburgueria-1658432069335_v2_4x3.jpg'
+              ],
+              preco: '19.90',
+              info: 'Mcdi',
+            ),
           ],
         ),
-        CategorySection(
-          categoryTitle: 'Recommended',
-          cards: [
-            CustomCard(
-                imageUrl: 'https://source.unsplash.com/200x200/?Burger',
-                title: 'Burger '),
-            CustomCard(
-                imageUrl: 'https://source.unsplash.com/200x200/?Pizza',
-                title: 'Pizza '),
-            CustomCard(
-                imageUrl: 'https://source.unsplash.com/200x200/?Sushi',
-                title: 'Sushi '),
-          ],
-        ),
-        Carousel(),
-        Carousel(),
-      ])),
+      ),
       bottomNavigationBar: Stack(
         children: [
           BottomNavigationBar(
@@ -138,7 +164,6 @@ class _HomePageState extends State<HomePage> {
                       onPressed: () => _onItemTapped(2),
                       elevation: 20,
                       hoverColor: Colors.black,
-                      // Remove default shadow
                       backgroundColor: Colors.white,
                       child: Icon(
                         Icons.shopping_cart_outlined,
@@ -155,11 +180,3 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-
-const List<String> _pageTitle = [
-  'Home',
-  'Wishlist',
-  'Cart',
-  'Pesan',
-  'Saya',
-];
