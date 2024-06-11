@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_application_1/views/home_page.dart'; // Importe a tela inicial do seu projeto
+import 'home_page.dart';
+import 'register.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -94,7 +95,8 @@ class _LoginPageState extends State<LoginPage> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 50, vertical: 15),
                     ),
                     child: Text(
                       'Login',
@@ -113,7 +115,11 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   TextButton(
                     onPressed: () {
-                      // Navegar para a página de registro
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => CadastroUsuarioPage()),
+                      );
                     },
                     child: Text('Inscreva-se agora'),
                   ),

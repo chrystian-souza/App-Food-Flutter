@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import '../components/carousel_home.dart';
-import '../components/category_cards.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import '../services/firebase_connect.dart';
 import '../components/cards.dart';
+import '../components/category_cards.dart';
+import '../components/carousel_home.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -11,6 +13,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final FirestoreService _firestoreService = FirestoreService();
   int _selectedIndex = 0;
 
   void _onItemTapped(int index) {
@@ -69,7 +72,7 @@ class _HomePageState extends State<HomePage> {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(16),
                   child: Image.network(
-                    'https://conteudo.imguol.com.br/c/noticias/f6/2022/07/21/hellmanns-escolhe-sao-paulo-para-lancar-sua-primeira-hamburgueria-1658432069335_v2_4x3.jpg',
+                    'https://firebasestorage.googleapis.com/v0/b/projeto-final-8ce4c.appspot.com/o/istockphoto-1159174187-2048x2048.jpg?alt=media&token=9aded2a2-de6a-49d6-bee2-6d43d103019a',
                     fit: BoxFit.cover,
                     width: 400,
                     height: 200,
@@ -77,40 +80,71 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
             ),
-            CategorySection(
-              categoryTitle: 'Categories',
-              cards: [
-                CustomCard(
-                  imageUrl: 'https://conteudo.imguol.com.br/c/noticias/f6/2022/07/21/hellmanns-escolhe-sao-paulo-para-lancar-sua-primeira-hamburgueria-1658432069335_v2_4x3.jpg',
-                  title: 'Burger ',
-                ),
-                CustomCard(
-                  imageUrl: 'https://conteudo.imguol.com.br/c/noticias/f6/2022/07/21/hellmanns-escolhe-sao-paulo-para-lancar-sua-primeira-hamburgueria-1658432069335_v2_4x3.jpg',
-                  title: 'Pizza ',
-                ),
-                CustomCard(
-                  imageUrl: 'https://conteudo.imguol.com.br/c/noticias/f6/2022/07/21/hellmanns-escolhe-sao-paulo-para-lancar-sua-primeira-hamburgueria-1658432069335_v2_4x3.jpg',
-                  title: 'Sushi ',
-                ),
-              ],
+            StreamBuilder<List<Map<String, dynamic>>>(
+              stream: _firestoreService.getCategories(),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                }
+                if (!snapshot.hasData) {
+                  return CircularProgressIndicator();
+                }
+                List<Map<String, dynamic>> categories = snapshot.data!;
+                if (categories.isEmpty) {
+                  return Text('No categories available');
+                }
+                return CategorySection(
+                  categoryTitle: 'Categories',
+                  cards: categories.map((category) {
+                    return CustomCard(
+                      imageUrl: category['imageUrl'],
+                      title: category['title'],
+                      onTap: () {
+                        // Ação a ser executada quando o card é clicado
+                        print('Card clicked: ${category['title']}');
+                        // Você pode navegar para outra página ou executar qualquer outra ação aqui
+                      },
+                    );
+                  }).toList(),
+                );
+              },
             ),
-            Carousel(
-              carousel: 'Popular Now',
-              titulo: 'Beef Burguer',
-              imageUrls: [
-                'https://conteudo.imguol.com.br/c/noticias/f6/2022/07/21/hellmanns-escolhe-sao-paulo-para-lancar-sua-primeira-hamburgueria-1658432069335_v2_4x3.jpg'
-              ],
-              preco: '19.90',
-              info: 'Mcdi',
-            ),
-            Carousel(
-              carousel: 'Recommended',
-              titulo: 'Beef Burguer',
-              imageUrls: [
-                'https://conteudo.imguol.com.br/c/noticias/f6/2022/07/21/hellmanns-escolhe-sao-paulo-para-lancar-sua-primeira-hamburgueria-1658432069335_v2_4x3.jpg'
-              ],
-              preco: '19.90',
-              info: 'Mcdi',
+            StreamBuilder<List<Map<String, dynamic>>>(
+              stream: _firestoreService.getProducts(),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                }
+                if (!snapshot.hasData) {
+                  return CircularProgressIndicator();
+                }
+                List<Map<String, dynamic>> products = snapshot.data!;
+                if (products.isEmpty) {
+                  return Text('No products available');
+                }
+                return Column(
+                  children: [
+                    Carousel(
+                      carouselTitle: 'Popular Now',
+                      imageUrls: products
+                          .map((product) => product['imageUrl'])
+                          .toList(),
+                      titulo: products.first['title'],
+                      preco: products.first['price'],
+                      info: products.first['description'],
+                    ),
+                    Carousel(
+                      carouselTitle: 'Recommended',
+                      imageUrls: products
+                          .map((product) => product['imageUrl'])
+                          .toList(),
+                      titulo: products.first['title'],
+                      preco: products.first['price'],
+                      info: products.first['description'],
+                    ),
+                  ],
+                );
+              },
             ),
           ],
         ),
@@ -130,7 +164,7 @@ class _HomePageState extends State<HomePage> {
                 label: 'Wishlist',
               ),
               BottomNavigationBarItem(
-                icon: SizedBox.shrink(), // Placeholder for central button
+                icon: SizedBox.shrink(),
                 label: '',
               ),
               BottomNavigationBarItem(

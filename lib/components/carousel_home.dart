@@ -1,20 +1,20 @@
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 
 class Carousel extends StatelessWidget {
-  final String carousel;
+  final String carouselTitle;
+  final List<dynamic> imageUrls;
   final String titulo;
-  final List<String> imageUrls;
-  final String info;
   final String preco;
+  final String info;
 
-  Carousel({
+  const Carousel({
     Key? key,
-    required this.titulo,
-    required this.carousel,
+    required this.carouselTitle,
     required this.imageUrls,
-    required this.info,
+    required this.titulo,
     required this.preco,
+    required this.info,
   }) : super(key: key);
 
   @override
@@ -23,105 +23,83 @@ class Carousel extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          padding: const EdgeInsets.all(8.0),
           child: Text(
-            carousel,
+            carouselTitle,
             style: TextStyle(
-              fontSize: 16.0,
+              fontSize: 18,
               fontWeight: FontWeight.bold,
             ),
           ),
         ),
-        SizedBox(height: 8.0),
         CarouselSlider(
           options: CarouselOptions(
-            height: 300.0, // Altura ajustada para um melhor layout
+            height: 250.0,
             autoPlay: true,
             enlargeCenterPage: true,
+            aspectRatio: 16 / 9,
+            autoPlayInterval: Duration(seconds: 3),
+            autoPlayAnimationDuration: Duration(milliseconds: 800),
+            autoPlayCurve: Curves.fastOutSlowIn,
+            pauseAutoPlayOnTouch: true,
           ),
           items: imageUrls.map((imageUrl) {
             return Builder(
               builder: (BuildContext context) {
-                return Card(
-                  margin: EdgeInsets.symmetric(horizontal: 10.0),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12.0),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(12.0),
-                          topRight: Radius.circular(12.0),
+                return GestureDetector(
+                  onTap: () {
+                    // Ação a ser executada quando o card é clicado
+                    print('Card clicked: $titulo');
+                  },
+                  child: Card(
+                    elevation: 10,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(16),
+                          child: Image.network(
+                            imageUrl,
+                            fit: BoxFit.cover,
+                            width: MediaQuery.of(context).size.width,
+                            height: 120,
+                          ),
                         ),
-                        child: Image.network(
-                          imageUrl,
-                          fit: BoxFit.cover,
-                          width: double.infinity,
-                          height: 180.0, // Altura aumentada para a imagem
-                          errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
-                            return Container(
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            titulo,
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          child: Text(
+                            'Price: $preco',
+                            style: TextStyle(
+                              fontSize: 14,
                               color: Colors.grey,
-                              child: Center(
-                                child: Icon(
-                                  Icons.error,
-                                  color: Colors.red,
-                                ),
-                              ),
-                              width: double.infinity,
-                              height: 180.0,
-                            );
-                          },
-                          loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
-                            if (loadingProgress == null) {
-                              return child;
-                            } else {
-                              return Center(
-                                child: CircularProgressIndicator(
-                                  value: loadingProgress.expectedTotalBytes != null
-                                      ? loadingProgress.cumulativeBytesLoaded / (loadingProgress.expectedTotalBytes ?? 1)
-                                      : null,
-                                ),
-                              );
-                            }
-                          },
+                            ),
+                          ),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              titulo,
-                              style: TextStyle(
-                                fontSize: 14.0,
-                                fontWeight: FontWeight.bold,
-                              ),
-                              overflow: TextOverflow.ellipsis,
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          child: Text(
+                            info,
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.grey,
                             ),
-                            SizedBox(height: 4.0),
-                            Text(
-                              info,
-                              style: TextStyle(
-                                fontSize: 12.0,
-                              ),
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            SizedBox(height: 4.0),
-                            Text(
-                              'Preço: $preco',
-                              style: TextStyle(
-                                fontSize: 12.0,
-                                fontWeight: FontWeight.w500,
-                              ),
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ],
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 );
               },
