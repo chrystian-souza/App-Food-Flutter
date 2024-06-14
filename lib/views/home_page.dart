@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_application_1/views/info_products.dart';
 import '../services/firebase_connect.dart';
 import '../components/cards.dart';
 import '../components/category_cards.dart';
 import '../components/carousel_home.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  const HomePage({Key? key}) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -80,31 +81,56 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
             ),
-            StreamBuilder<List<Map<String, dynamic>>>(
+            StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
               stream: _firestoreService.getCategories(),
               builder: (context, snapshot) {
+                // Verifica os estados do snapshot
                 if (snapshot.hasError) {
                   return Text('Error: ${snapshot.error}');
                 }
-                if (!snapshot.hasData) {
+
+                if (snapshot.connectionState == ConnectionState.waiting) {
                   return CircularProgressIndicator();
                 }
-                List<Map<String, dynamic>> categories = snapshot.data!;
-                if (categories.isEmpty) {
+
+                // Obtém os documentos da categoria
+                List<QueryDocumentSnapshot<Map<String, dynamic>>> categoryDocs =
+                    snapshot.data!.docs;
+
+                if (categoryDocs.isEmpty) {
                   return Text('No categories available');
                 }
+
+                // Renderiza a seção de categorias
                 return CategorySection(
                   categoryTitle: 'Categories',
-                  cards: categories.map((category) {
-                    return CustomCard(
-                      imageUrl: category['imageUrl'],
-                      title: category['title'],
-                      onTap: () {
-                        // Ação a ser executada quando o card é clicado
-                        print('Card clicked: ${category['title']}');
-                        // Você pode navegar para outra página ou executar qualquer outra ação aqui
-                      },
-                    );
+                  cards: categoryDocs.map((categoryDoc) {
+                    var category = categoryDoc.data();
+                    var categoryId = categoryDoc.id;
+
+                    if (category != null &&
+                        category.containsKey('imageUrl') &&
+                        category.containsKey('title')) {
+                      return CustomCard(
+                        imageUrl: category['imageUrl'],
+                        title: category['title'],
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  InfoProducts(categoryId: categoryId),
+                            ),
+                          );
+                        },
+                      );
+                    } else {
+                      return CustomCard(
+                        imageUrl: '',
+                        title: '',
+                        onTap: () {},
+                      );
+                    }
                   }).toList(),
                 );
               },
@@ -115,13 +141,12 @@ class _HomePageState extends State<HomePage> {
                 if (snapshot.hasError) {
                   return Text('Error: ${snapshot.error}');
                 }
-                if (!snapshot.hasData) {
-                  return CircularProgressIndicator();
-                }
-                List<Map<String, dynamic>> products = snapshot.data!;
-                if (products.isEmpty) {
+                if (!snapshot.hasData || snapshot.data!.isEmpty) {
                   return Text('No products available');
                 }
+
+                List<Map<String, dynamic>> products = snapshot.data!;
+
                 return Column(
                   children: [
                     Carousel(

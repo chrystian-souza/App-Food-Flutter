@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 class CustomCard extends StatelessWidget {
   final String imageUrl;
   final String title;
+  final String description;
   final VoidCallback onTap; // Adicione um callback onTap
 
   const CustomCard({
     Key? key,
     required this.imageUrl,
     required this.title,
+    this.description = '',
     required this.onTap, // Adicione o parâmetro onTap
   }) : super(key: key);
 
