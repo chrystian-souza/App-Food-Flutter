@@ -3,18 +3,18 @@ import 'package:carousel_slider/carousel_slider.dart';
 
 class Carousel extends StatelessWidget {
   final String carouselTitle;
-  final List<dynamic> imageUrls;
-  final String titulo;
-  final double preco;
-  final String info;
+  final List<String> imageUrls;
+  final List<String> titulos;
+  final List<double> precos;
+  final List<String> infos;
 
   const Carousel({
     Key? key,
     required this.carouselTitle,
     required this.imageUrls,
-    required this.titulo,
-    required this.preco,
-    required this.info,
+    required this.titulos,
+    required this.precos,
+    required this.infos,
   }) : super(key: key);
 
   @override
@@ -43,13 +43,13 @@ class Carousel extends StatelessWidget {
             autoPlayCurve: Curves.fastOutSlowIn,
             pauseAutoPlayOnTouch: true,
           ),
-          items: imageUrls.map((imageUrl) {
+          items: List.generate(imageUrls.length, (index) {
             return Builder(
               builder: (BuildContext context) {
                 return GestureDetector(
                   onTap: () {
                     // Ação a ser executada quando o card é clicado
-                    print('Card clicked: $titulo');
+                    print('Card clicked: ${titulos[index]}');
                   },
                   child: Card(
                     elevation: 10,
@@ -62,7 +62,7 @@ class Carousel extends StatelessWidget {
                         ClipRRect(
                           borderRadius: BorderRadius.circular(16),
                           child: Image.network(
-                            imageUrl,
+                            imageUrls[index],
                             fit: BoxFit.cover,
                             width: MediaQuery.of(context).size.width,
                             height: 120,
@@ -71,7 +71,7 @@ class Carousel extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
-                            titulo,
+                            titulos[index],
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
@@ -81,7 +81,7 @@ class Carousel extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 8.0),
                           child: Text(
-                            'Price: $preco',
+                            'Price: \$${precos[index]}',
                             style: TextStyle(
                               fontSize: 14,
                               color: Colors.grey,
@@ -91,7 +91,7 @@ class Carousel extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 8.0),
                           child: Text(
-                            info,
+                            infos[index],
                             style: TextStyle(
                               fontSize: 12,
                               color: Colors.grey,
@@ -104,7 +104,7 @@ class Carousel extends StatelessWidget {
                 );
               },
             );
-          }).toList(),
+          }),
         ),
       ],
     );

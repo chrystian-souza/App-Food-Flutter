@@ -18,14 +18,17 @@ class _HomePageState extends State<HomePage> {
   final FirestoreService _firestoreService = FirestoreService();
   int _selectedIndex = 0;
 
-    void _onItemTapped(int index) {
+  void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
       // Verifica se o índice clicado é o do carrinho (índice 2)
       if (index == 2) {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => CartPage(firestoreService: _firestoreService,)),
+          MaterialPageRoute(
+              builder: (context) => CartPage(
+                    firestoreService: _firestoreService,
+                  )),
         );
       }
     });
@@ -155,25 +158,35 @@ class _HomePageState extends State<HomePage> {
 
                 List<Map<String, dynamic>> products = snapshot.data!;
 
+                // Mapeia cada campo para garantir que seja do tipo correto
+                List<String> imageUrls = products
+                    .map((product) => product['imageUrl'] as String)
+                    .toList();
+                List<String> titles = products
+                    .map((product) => product['title'] as String)
+                    .toList();
+                List<double> prices = products
+                    .map((product) => product['price'] as double)
+                    .toList();
+                List<String> descriptions = products
+                    .map((product) => product['description'] as String)
+                    .toList();
+
                 return Column(
                   children: [
                     Carousel(
                       carouselTitle: 'Popular Now',
-                      imageUrls: products
-                          .map((product) => product['imageUrl'])
-                          .toList(),
-                      titulo: products.first['title'],
-                      preco: products.first['price'],
-                      info: products.first['description'],
+                      imageUrls: imageUrls,
+                      titulos: titles,
+                      precos: prices,
+                      infos: descriptions,
                     ),
                     Carousel(
                       carouselTitle: 'Recommended',
-                      imageUrls: products
-                          .map((product) => product['imageUrl'])
-                          .toList(),
-                      titulo: products.first['title'],
-                      preco: products.first['price'],
-                      info: products.first['description'],
+                      imageUrls: imageUrls,
+                      titulos: titles,
+                      precos: prices,
+                      infos: descriptions,
                     ),
                   ],
                 );
@@ -198,12 +211,11 @@ class _HomePageState extends State<HomePage> {
               ),
               BottomNavigationBarItem(
                 icon: SizedBox.shrink(),
-                label: '', 
+                label: '',
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.chat_outlined, color: Colors.black),
                 label: 'Pesan',
-                
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.person_outline, color: Colors.black),
