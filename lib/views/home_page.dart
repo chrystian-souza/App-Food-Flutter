@@ -190,11 +190,12 @@ class _HomePageState extends State<HomePage> {
               ),
               BottomNavigationBarItem(
                 icon: SizedBox.shrink(),
-                label: '',
+                label: '' ,
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.chat_outlined, color: Colors.black),
                 label: 'Pesan',
+                
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.person_outline, color: Colors.black),
