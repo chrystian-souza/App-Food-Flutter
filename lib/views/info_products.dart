@@ -43,13 +43,15 @@ class InfoProducts extends StatelessWidget {
 
                   // Verifica se todos os campos necessários estão presentes e não são nulos
                   final String? productId = product['productId'] as String?;
+                  final String? cartId = product['cartId'] as String?;
                   final String? imageUrl = product['imageUrl'] as String?;
                   final String? title = product['title'] as String?;
-                  final String? price = product['price'] as String?;
+                  final double? price = product['price'] as double?;
                   final String? description = product['description'] as String?;
 
                   // Logging product details for debugging
                   print('Product ID: $productId');
+                  print('cart ID: $cartId');
                   print('Image URL: $imageUrl');
                   print('Title: $title');
                   print('Price: $price');
@@ -66,43 +68,30 @@ class InfoProducts extends StatelessWidget {
                         : Container(
                             width: 100,
                             height: 100,
-                            color:
-                                Colors.grey), // Placeholder if imageUrl is null
+                            color: Colors.grey,
+                          ),
                     title: Text(title ?? 'No title'),
                     subtitle: Text(description ?? 'No description'),
                     trailing: GestureDetector(
                       onTap: () {
                         // Verifique se todos os valores são válidos antes de chamar _addToCart
-                        if (productId != null && productId.isNotEmpty) {
-                          _firestoreService
-                              .addToCart(
+                        if (productId != null &&
+                            productId.isNotEmpty &&
+                            price != null) {
+                          _addToCart(
                             productId,
+                            cartId ?? '',
                             title ?? '', // Evite passar null para o título
-                            price ?? '', // Evite passar null para o preço
+                            price.toDouble(), // Convertendo para double
                             description ??
                                 '', // Evite passar null para a descrição
                             imageUrl ??
                                 '', // Evite passar null para a URL da imagem
-                          )
-                              .then((_) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text('Product added to cart'),
-                                duration: Duration(seconds: 2),
-                              ),
-                            );
-                          }).catchError((error) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                    'Failed to add product to cart: $error'),
-                                duration: Duration(seconds: 2),
-                              ),
-                            );
-                          });
+                            context,
+                          );
                         } else {
-                          print('Invalid product data:');
                           print('productId: $productId');
+                          print('Id: $cartId');
                           print('imageUrl: $imageUrl');
                           print('title: $title');
                           print('price: $price');
@@ -127,15 +116,17 @@ class InfoProducts extends StatelessWidget {
     );
   }
 
-  // Método  para adicionar produto ao carrinho
-  void addToCart(String productId, BuildContext context) {
-   
-    String imageUrl = '';
-    String title = ''; 
-    String price = ''; 
-    String description = ''; 
+  void _addToCart(
+    String cartId,
+    String productId,
+    String title,
+    double price,
+    String description,
+    String imageUrl,
+    BuildContext context,
+  ) {
     _firestoreService
-        .addToCart(productId, title, price, description, imageUrl)
+        .addToCart(productId, cartId, title, price, description, imageUrl)
         .then((_) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

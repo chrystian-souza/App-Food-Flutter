@@ -28,7 +28,7 @@ class CartPage extends StatelessWidget {
           double total = 0;
 
           cartProducts.forEach((product) {
-            double price = double.parse(product['price']);
+            double price = product['price'] as double;
             int quantity = product['quantity'];
             total += price * quantity;
           });
@@ -40,16 +40,24 @@ class CartPage extends StatelessWidget {
                   itemCount: cartProducts.length,
                   itemBuilder: (context, index) {
                     var product = cartProducts[index];
+                    String cartId = product['cartId'] ?? ''; // Assegure que cartId nunca seja null
+
+                    if (cartId.isEmpty) {
+                      return ListTile(
+                        title: Text('Invalid cart item'),
+                      );
+                    }
+
                     return Card(
                       margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                       child: ListTile(
                         leading: Image.network(
-                          product['imageUrl'],
+                          product['imageUrl'] ?? '',
                           fit: BoxFit.cover,
                           width: 100,
                           height: 100,
                         ),
-                        title: Text(product['productName']),
+                        title: Text(product['title'] ?? 'No Name'),
                         subtitle: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -60,7 +68,21 @@ class CartPage extends StatelessWidget {
                         trailing: IconButton(
                           icon: Icon(Icons.delete),
                           onPressed: () {
-                            _firestoreService.removeFromCart(product['productId']);
+                            _firestoreService.removeFromCart(cartId).then((_) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('Product removed from cart'),
+                                  duration: Duration(seconds: 2),
+                                ),
+                              );
+                            }).catchError((error) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('Failed to remove product: $error'),
+                                  duration: Duration(seconds: 2),
+                                ),
+                              );
+                            });
                           },
                         ),
                       ),
@@ -95,7 +117,6 @@ class CartPage extends StatelessWidget {
               SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
-                  // Implementar lógica de checkout aqui
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text('Purchase completed'),

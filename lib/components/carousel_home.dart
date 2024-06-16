@@ -5,7 +5,7 @@ class Carousel extends StatelessWidget {
   final String carouselTitle;
   final List<dynamic> imageUrls;
   final String titulo;
-  final String preco;
+  final double preco;
   final String info;
 
   const Carousel({
