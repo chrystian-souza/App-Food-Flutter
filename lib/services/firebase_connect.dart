@@ -14,15 +14,16 @@ class FirestoreService {
             .toList());
   }
 
-Stream<List<Map<String, dynamic>>> getCartItems() {
-  return _db.collection('cart').snapshots().map((snapshot) {
-    // Mapeia cada documento do snapshot para um mapa de dados
-    return snapshot.docs.map((doc) {
-      var data = doc.data();  // Obtém os dados do documento
-      data['cartId'] = doc.id;  // Adiciona a chave primária (ID do documento) ao mapa de dados
-      return data;  // Retorna o mapa de dados atualizado
-    }).toList();  // Converte o Iterable para uma lista
-  });
+  Stream<List<Map<String, dynamic>>> getCartItems() {
+    return _db.collection('cart').snapshots().map((snapshot) {
+      // Mapeia cada documento do snapshot para um mapa de dados
+      return snapshot.docs.map((doc) {
+        var data = doc.data(); // Obtém os dados do documento
+        data['cartId'] = doc
+            .id; // Adiciona a chave primária (ID do documento) ao mapa de dados
+        return data; // Retorna o mapa de dados atualizado
+      }).toList(); // Converte o Iterable para uma lista
+    });
   }
 
   Stream<QuerySnapshot<Map<String, dynamic>>> getCategories() {
@@ -69,5 +70,41 @@ Stream<List<Map<String, dynamic>>> getCartItems() {
         .delete()
         .then((_) => print("Document deleted"))
         .catchError((e) => print("Error deleting document $e"));
+  }
+
+  Stream<List<Map<String, dynamic>>> getFavoriteItems() {
+    return _db.collection('favorites').snapshots().map((snapshot) {
+      return snapshot.docs.map((doc) {
+        var data = doc.data();
+        data['favoriteId'] = doc.id; // Inclui o ID do documento
+        return data;
+      }).toList();
+    });
+  }
+
+  Future<void> removeFromFavorites(String favoriteId) {
+    return _db.collection('favorites').doc(favoriteId).delete();
+  }
+
+  Future<void> addToFavorites( String productId, String title,
+      double price, String description, String imageUrl) async {
+    try {
+      
+      Map<String, dynamic> favoriteData = {
+        'productId': productId,
+        'title': title,
+        'price': price,
+        'description': description,
+        'imageUrl': imageUrl,
+      };
+
+      // Adicionar o item ao carrinho
+      await _db.collection('favorites').add(favoriteData);
+
+      print('Produto adicionado aos favoritos com sucesso');
+    } catch (e) {
+      print('Erro ao adicionar aos favoritos: $e');
+      throw Exception('Failed to add to favorites: $e');
+    }
   }
 }

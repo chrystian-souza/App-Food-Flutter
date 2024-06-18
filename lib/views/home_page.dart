@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_application_1/views/cart_page.dart';
-import 'package:flutter_application_1/views/info_products.dart';
+import 'package:flutter_application_1/views/favorites.dart';
+import 'package:flutter_application_1/views/list_products.dart';
 import '../services/firebase_connect.dart';
 import '../components/cards.dart';
 import '../components/category_cards.dart';
@@ -18,17 +19,19 @@ class _HomePageState extends State<HomePage> {
   final FirestoreService _firestoreService = FirestoreService();
   int _selectedIndex = 0;
 
+ 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
-      // Verifica se o índice clicado é o do carrinho (índice 2)
-      if (index == 2) {
+      if (index == 1) {
         Navigator.push(
           context,
-          MaterialPageRoute(
-              builder: (context) => CartPage(
-                    firestoreService: _firestoreService,
-                  )),
+          MaterialPageRoute(builder: (context) =>  FavoritesPage(firestoreService: _firestoreService)),
+        );
+      } else if (index == 2) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => CartPage(firestoreService: _firestoreService)),
         );
       }
     });
@@ -130,7 +133,7 @@ class _HomePageState extends State<HomePage> {
                             context,
                             MaterialPageRoute(
                               builder: (context) =>
-                                  InfoProducts(categoryId: categoryId),
+                                  ListProducts(categoryId: categoryId),
                             ),
                           );
                         },
