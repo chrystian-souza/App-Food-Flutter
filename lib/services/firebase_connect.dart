@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 
 class FirestoreService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
@@ -107,4 +109,20 @@ class FirestoreService {
       throw Exception('Failed to add to favorites: $e');
     }
   }
+
+  Future<void> _logout(BuildContext context) async {
+    
+  try {
+    await FirebaseAuth.instance.signOut();
+    Navigator.of(context).pushReplacementNamed('/login'); // Navega para a tela de login
+  } catch (e) {
+    print('Error logging out: $e');
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Failed to log out: $e'),
+        duration: Duration(seconds: 2),
+      ),
+    );
+  }
+}
 }

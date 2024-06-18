@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_application_1/views/cart_page.dart';
@@ -17,24 +18,43 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final FirestoreService _firestoreService = FirestoreService();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   int _selectedIndex = 0;
 
- 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
       if (index == 1) {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) =>  FavoritesPage(firestoreService: _firestoreService)),
+          MaterialPageRoute(
+              builder: (context) =>
+                  FavoritesPage(firestoreService: _firestoreService)),
         );
       } else if (index == 2) {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => CartPage(firestoreService: _firestoreService)),
+          MaterialPageRoute(
+              builder: (context) =>
+                  CartPage(firestoreService: _firestoreService)),
         );
       }
     });
+  }
+  
+   Future<void> _logout() async {
+    try {
+      await _auth.signOut();
+      Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+    } catch (e) {
+      print('Error logging out: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to log out: $e'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+    }
   }
 
   @override
@@ -73,6 +93,64 @@ class _HomePageState extends State<HomePage> {
             onPressed: () {},
           ),
         ],
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.blue,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: CircleAvatar(
+                      radius: 40,
+                      backgroundImage: AssetImage(
+                          'assets/images/profile.jpg'), // Imagem do perfil do usuário
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Text(
+                      'Nome do Usuário', // Nome do usuário
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Text(
+                      'email@example.com', // Email do usuário
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            
+            ListTile(
+              leading: Icon(Icons.settings),
+              title: Text('Settings'),
+              onTap: () {
+                // Implementar ação para abrir as configurações do aplicativo
+              },
+            ),
+           ListTile(
+              leading: Icon(Icons.logout),
+              title: Text('Logout'),
+              onTap: _logout, // Chama a função de logout ao pressionar "Logout"
+            ),
+          ],
+        ),
       ),
       body: SingleChildScrollView(
         child: Column(

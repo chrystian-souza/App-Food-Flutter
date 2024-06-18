@@ -123,6 +123,7 @@ class _LoginPageState extends State<LoginPage> {
                     },
                     child: Text('Inscreva-se agora'),
                   ),
+                  SizedBox(height: 20),
                 ],
               ),
             ),
