@@ -30,7 +30,7 @@ class FavoritesPage extends StatelessWidget {
             itemCount: favoriteProducts.length,
             itemBuilder: (context, index) {
               var product = favoriteProducts[index];           
-              String cartId = product['cartId'] ?? '';
+              String favoriteId = product['favoriteId']; 
               String title = product['title'] ?? '';
               double price = product['price'] ?? 0.0;
               String description = product['description'] ?? '';
@@ -56,7 +56,7 @@ class FavoritesPage extends StatelessWidget {
                   trailing: IconButton(
                     icon: Icon(Icons.delete),
                     onPressed: () {
-                      _firestoreService.removeFromFavorites(cartId).then((_) {
+                      _firestoreService.removeFromFavorites(favoriteId).then((_) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text('Product removed from favorites'),
