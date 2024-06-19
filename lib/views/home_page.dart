@@ -2,8 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_application_1/views/cart_page.dart';
-import 'package:flutter_application_1/views/favorites.dart';
-import 'package:flutter_application_1/views/list_products.dart';
+import 'package:flutter_application_1/views/favorites_page.dart';
+import 'package:flutter_application_1/views/product_list_page.dart';
+import 'package:flutter_application_1/views/product_datail_page.dart';
 import '../services/firebase_connect.dart';
 import '../components/cards.dart';
 import '../components/category_cards.dart';
@@ -41,8 +42,8 @@ class _HomePageState extends State<HomePage> {
       }
     });
   }
-  
-   Future<void> _logout() async {
+
+  Future<void> _logout() async {
     try {
       await _auth.signOut();
       Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
@@ -55,6 +56,21 @@ class _HomePageState extends State<HomePage> {
         ),
       );
     }
+  }
+
+  void _navigateToProductDetail(BuildContext context, String imageUrl,
+      String title, double price, String description) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ProductDetailPage(
+          imageUrl: imageUrl,
+          title: title,
+          price: price,
+          description: description,
+        ),
+      ),
+    );
   }
 
   @override
@@ -100,7 +116,7 @@ class _HomePageState extends State<HomePage> {
           children: <Widget>[
             DrawerHeader(
               decoration: BoxDecoration(
-                color: Colors.blue,
+                color: Color.fromARGB(255, 219, 88, 0),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -136,7 +152,6 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
             ),
-            
             ListTile(
               leading: Icon(Icons.settings),
               title: Text('Settings'),
@@ -144,7 +159,7 @@ class _HomePageState extends State<HomePage> {
                 // Implementar ação para abrir as configurações do aplicativo
               },
             ),
-           ListTile(
+            ListTile(
               leading: Icon(Icons.logout),
               title: Text('Logout'),
               onTap: _logout, // Chama a função de logout ao pressionar "Logout"
@@ -261,6 +276,15 @@ class _HomePageState extends State<HomePage> {
                       titulos: titles,
                       precos: prices,
                       infos: descriptions,
+                      onTap: (index) {
+                        _navigateToProductDetail(
+                          context,
+                          imageUrls[index],
+                          titles[index],
+                          prices[index],
+                          descriptions[index],
+                        );
+                      },
                     ),
                     Carousel(
                       carouselTitle: 'Recommended',
@@ -268,6 +292,15 @@ class _HomePageState extends State<HomePage> {
                       titulos: titles,
                       precos: prices,
                       infos: descriptions,
+                      onTap: (index) {
+                        _navigateToProductDetail(
+                          context,
+                          imageUrls[index],
+                          titles[index],
+                          prices[index],
+                          descriptions[index],
+                        );
+                      },
                     ),
                   ],
                 );

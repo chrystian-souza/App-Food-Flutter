@@ -17,8 +17,8 @@ class LoginApp extends StatelessWidget {
       title: 'Seu App',
       initialRoute: '/', // Defina a rota inicial, se necessário
       routes: {
-        '/': (context) => LoginPage(), // Rota para a tela de login
-        '/home': (context) => HomePage(), // Exemplo de rota para a HomePage
+        '/': (context) => HomePage(), // Rota para a tela de login
+       // '/home': (context) => HomePage(), // Exemplo de rota para a HomePage
         // Outras rotas podem ser definidas aqui conforme necessário
       },
       onUnknownRoute: (settings) {

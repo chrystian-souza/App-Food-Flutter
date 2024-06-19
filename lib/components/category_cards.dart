@@ -19,7 +19,7 @@ class CategorySection extends StatelessWidget {
             child: Text(
               categoryTitle,
               style: TextStyle(
-                fontSize: 16,
+                fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
             ),

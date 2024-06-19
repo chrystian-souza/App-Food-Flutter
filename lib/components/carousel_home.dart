@@ -7,15 +7,17 @@ class Carousel extends StatelessWidget {
   final List<String> titulos;
   final List<double> precos;
   final List<String> infos;
+  final Function(int) onTap;
 
-  const Carousel({
-    Key? key,
-    required this.carouselTitle,
-    required this.imageUrls,
-    required this.titulos,
-    required this.precos,
-    required this.infos,
-  }) : super(key: key);
+  const Carousel(
+      {Key? key,
+      required this.carouselTitle,
+      required this.imageUrls,
+      required this.titulos,
+      required this.precos,
+      required this.infos,
+      required this.onTap})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +25,7 @@ class Carousel extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(16.0),
           child: Text(
             carouselTitle,
             style: TextStyle(
@@ -47,10 +49,7 @@ class Carousel extends StatelessWidget {
             return Builder(
               builder: (BuildContext context) {
                 return GestureDetector(
-                  onTap: () {
-                    // Ação a ser executada quando o card é clicado
-                    print('Card clicked: ${titulos[index]}');
-                  },
+                  onTap: () => onTap(index),
                   child: Card(
                     elevation: 10,
                     shape: RoundedRectangleBorder(
