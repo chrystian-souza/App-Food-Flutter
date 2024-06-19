@@ -135,7 +135,7 @@ class _HomePageState extends State<HomePage> {
                       'Nome do Usuário', // Nome do usuário
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 18,
+                        fontSize: 12,
                       ),
                     ),
                   ),
