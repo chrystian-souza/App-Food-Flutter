@@ -17,8 +17,7 @@ class _CadastroUsuarioPageState extends State<CadastroUsuarioPage> {
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmpasswordController =
-      TextEditingController();
+  final TextEditingController _confirmpasswordController = TextEditingController();
   bool _isLoading = false;
 
   Future<void> _submitForm() async {

@@ -88,10 +88,9 @@ class FirestoreService {
     return _db.collection('favorites').doc(favoriteId).delete();
   }
 
-  Future<void> addToFavorites( String productId, String title,
-      double price, String description, String imageUrl) async {
+  Future<void> addToFavorites(String productId, String title, double price,
+      String description, String imageUrl) async {
     try {
-      
       Map<String, dynamic> favoriteData = {
         'productId': productId,
         'title': title,
@@ -111,18 +110,18 @@ class FirestoreService {
   }
 
   Future<void> _logout(BuildContext context) async {
-    
-  try {
-    await FirebaseAuth.instance.signOut();
-    Navigator.of(context).pushReplacementNamed('/login'); // Navega para a tela de login
-  } catch (e) {
-    print('Error logging out: $e');
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Failed to log out: $e'),
-        duration: Duration(seconds: 2),
-      ),
-    );
+    try {
+      await FirebaseAuth.instance.signOut();
+      Navigator.of(context)
+          .pushReplacementNamed('/login'); // Navega para a tela de login
+    } catch (e) {
+      print('Error logging out: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to log out: $e'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+    }
   }
-}
 }
