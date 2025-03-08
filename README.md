@@ -1,4 +1,6 @@
 Food App - Aplicativo de Delivery de Comida
+
+
 Um aplicativo de delivery de comida desenvolvido em Flutter e Dart, utilizando Firebase como banco de dados. O app oferece uma experiência intuitiva para os usuários explorarem cardápios de diferentes categorias (Hambúrguer, Pizza e Sushi), favoritar produtos, adicionar itens ao carrinho e gerenciar pedidos.
 
 Funcionalidades Principais
